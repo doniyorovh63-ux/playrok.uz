@@ -1,85 +1,60 @@
-// 1. Bot va Foydalanuvchi ma'lumotlari
+// 1. Sozlamalar
 const BOT_TOKEN = '8766070909:AAGmzRDqY-SnflIQxRp8sntxjWwjubuJrKE';
 const CHAT_ID = '8085768031';
 
-// 2. Mahsulotlar ro'yxati
+// 2. Mahsulotlar (Buni xohlagancha o'zgartirishingiz mumkin)
 const products = [
-    { 
-        id: 1, 
-        name: "PUBG Mobile VIP Akkaunt", 
-        price: "150,000", 
-        img: "https://p325k7wa.twic.pics/high/pubg/pubg-battlegrounds/00-page-setup/pubg-battlegrounds-og-image.jpg" 
-    },
-    { 
-        id: 2, 
-        name: "Free Fire Max Akkaunt", 
-        price: "95,000", 
-        img: "https://i.ytimg.com/vi/uCdS4itM_X8/maxresdefault.jpg" 
-    },
-    { 
-        id: 3, 
-        name: "Telegram Premium (1 yil)", 
-        price: "350,000", 
-        img: "https://static.euronews.com/articles/stories/06/78/34/00/1200x675_cmsv2_f21a00a8-9d29-5776-9d32-d17e3f84f09d-6783400.jpg" 
-    },
-    { 
-        id: 4, 
-        name: "Roblox Robux (1000 RBX)", 
-        price: "120,000", 
-        img: "https://images.rbxcdn.com/cece570e3f01447011961c0ec0cf76d4.jpg" 
-    }
+    { id: 1, name: "PUBG Mobile VIP", price: "150,000", img: "https://p325k7wa.twic.pics/high/pubg/pubg-battlegrounds/00-page-setup/pubg-battlegrounds-og-image.jpg" },
+    { id: 2, name: "Free Fire Max", price: "95,000", img: "https://i.ytimg.com/vi/uCdS4itM_X8/maxresdefault.jpg" },
+    { id: 3, name: "Telegram Premium", price: "350,000", img: "https://static.euronews.com/articles/stories/06/78/34/00/1200x675_cmsv2_f21a00a8-9d29-5776-9d32-d17e3f84f09d-6783400.jpg" }
 ];
 
-// 3. Mahsulotlarni ekranda chiqarish funksiyasi
-function renderProducts() {
+// 3. Mahsulotlarni ekranda chiqarish
+function render() {
     const container = document.querySelector('.container');
     if (!container) return;
-
-    container.innerHTML = products.map(p => `
-        <div class="card">
-            <img src="${p.img}" alt="${p.name}" style="width:100%; border-radius:15px; height:180px; object-fit:cover;">
-            <h3 style="margin: 15px 0 10px;">${p.name}</h3>
-            <p style="color:#00ff88; font-size:22px; font-weight:bold; margin-bottom: 15px;">${p.price} so'm</p>
-            <button onclick="orderNow('${p.name}', '${p.price}')" style="cursor:pointer;">Sotib olish</button>
-        </div>
-    `).join('');
+    
+    container.innerHTML = ''; // Konteynerni tozalash
+    products.forEach(p => {
+        container.innerHTML += `
+            <div class="card">
+                <img src="${p.img}" alt="${p.name}" style="width:100%; border-radius:15px; height:180px; object-fit:cover;">
+                <h3>${p.name}</h3>
+                <p style="color:#00ff88; font-size:22px; font-weight:bold;">${p.price} so'm</p>
+                <button onclick="order('${p.name}', '${p.price}')">Sotib olish</button>
+            </div>
+        `;
+    });
 }
 
-// 4. Telegramga buyurtma yuborish funksiyasi
-async function orderNow(productName, price) {
-    const phone = prompt(`${productName} uchun Telegram raqamingiz yoki Username'ingizni kiriting:\n(Masalan: +998901234567)`);
-    
-    if (phone && phone.length > 4) {
-        // Xabar matni
-        const message = `🚀 *YANGI BUYURTMA!*\n\n` +
-                        `🎮 *Mahsulot:* ${productName}\n` +
-                        `💰 *Narxi:* ${price} so'm\n` +
-                        `👤 *Mijoz:* ${phone}\n\n` +
-                        `🕒 *Vaqt:* ${new Date().toLocaleString()}`;
-        
+// 4. Buyurtmani Telegramga yuborish
+async function order(name, price) {
+    const contact = prompt(`${name} uchun raqamingizni kiriting:`);
+
+    if (contact && contact.trim() !== "") {
+        const text = `🚀 *YANGI BUYURTMA!*\n\n🎮 *Mahsulot:* ${name}\n💰 *Narxi:* ${price} so'm\n👤 *Mijoz:* ${contact}`;
+
         try {
             const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: CHAT_ID,
-                    text: message,
+                    text: text,
                     parse_mode: 'Markdown'
                 })
             });
 
             if (response.ok) {
-                alert("✅ Rahmat! Buyurtmangiz qabul qilindi. Tez orada siz bilan bog'lanamiz!");
+                alert("✅ Buyurtma yuborildi! Tez orada sizga yozamiz.");
             } else {
-                alert("❌ Xatolik! Botga /start bosganingizni tekshiring.");
+                alert("❌ Xatolik yuz berdi. Bot sozlamalarini tekshiring.");
             }
-        } catch (error) {
-            alert("🌐 Internet aloqasida muammo yoki xatolik yuz berdi.");
+        } catch (err) {
+            alert("🌐 Internetda muammo yoki server xatosi.");
         }
-    } else if (phone) {
-        alert("⚠️ Iltimos, ma'lumotni to'g'ri kiriting!");
     }
 }
 
-// Sahifa yuklanganda mahsulotlarni chiqarish
-document.addEventListener('DOMContentLoaded', renderProducts);
+// Sahifa yuklanganda render qilish
+document.addEventListener('DOMContentLoaded', render);
