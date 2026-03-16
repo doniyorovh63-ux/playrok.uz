@@ -1,0 +1,51 @@
+/* Umumiy sozlamalar */
+body {
+    background-color: #0f1111; /* To'q qora fon */
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Mahsulotlar konteyneri */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Mahsulot kartochkasi */
+.card {
+    background: #1a1d1d;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #333;
+    transition: 0.3s ease; /* Sichqoncha borganda sekin o'zgarishi uchun */
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Kartochka biroz tepaga ko'tariladi */
+    border-color: #ff4500; /* Olov rang chegara */
+    box-shadow: 0 10px 20px rgba(255, 69, 0, 0.3);
+}
+
+/* Sotib olish tugmasi */
+button {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+button:hover {
+    filter: brightness(1.2); /* Tugma biroz yorishadi */
+}
